@@ -7,7 +7,11 @@ import os
 import re
 
 
+
 #pickle.dump('<<!NO_NAME!>>', open('key_check.p', 'wb'))
+
+
+
 
 
 
@@ -21,7 +25,9 @@ def login_init():
     print('<<!LOGIN_DENIED!>>')
     return False
 
-
+##########_RUN_THIS_TO_INIATE_THE_LOGZ_PROGRAM_############
+#login_init()
+############################################################
 
 
 #def security_check():
@@ -91,7 +97,7 @@ def logz():
             log_id = 0
             for l in logset:
                 log_id += 1
-                print('{}| {}    || {}'.format(l, d_1(key, logset[l][0]), d_1(key, logset[l][1][0])))
+                print('{:2}| {}    || {}'.format(l, d_1(key, logset[l][0]), d_1(key, logset[l][1][0])))
         except:
             print('<<!ERROR|LOGS_CANNOT_BE_DISPLAYED!>>')
             pass
@@ -113,8 +119,10 @@ def logz():
                 except:
                     log.append(e_1(key, '<CORRUPTED>'))
                 if line == '/LOG':
+                    #str(int(sorted(logset.keys())[-1]) + 1)
+
                     try:
-                        logset.update({str(int(sorted(logset.keys())[-1]) + 1) : [e_1(key, str(time)), log]})
+                        logset.update({str(int(sorted([int(l) for l in logset.keys()])[-1]) + 1) : [e_1(key, str(time)), log]})
                     except:
                         logset.update({'0' : [e_1(key, str(time)), log]})
                     pickle.dump(logset, open('logset.p', 'wb'))
@@ -123,7 +131,7 @@ def logz():
             remove_num = (''.join([c for c in command if c.isdigit()]))
             while True:
                 print('<<!REMOVE_LOG_%s?!>>' % remove_num)
-                confirm = input('>>[Y]es/[N]o>>')
+                confirm = input('>>[Y]es/[N]o>> ')
                 if confirm == 'Y':
                     del logset[remove_num]
                     pickle.dump(logset, open('logset.p', 'wb'))
