@@ -1,160 +1,115 @@
-import pickle
-from ethropic_encryption import *
-import getpass
-import pandas as pd
 import datetime
+import getpass
+import socket
 import os
-import re
+import uuid
+import base64
+import hashlib
+from cryptography.fernet import Fernet
 
 
 
-#pickle.dump('<<!NO_NAME!>>', open('key_check.p', 'wb'))
-
-
-
-
-
-
-def login_init():
-    key = getpass.getpass(prompt = '>>ENTER_KEY>> ')
-    command = getpass.getpass(prompt = '>>ENTER_LOGIN>> ')
-    if command == d_1(key, pickle.load(open('passw0rd.p', 'rb'))):
-        pickle.dump(key, open('key_check.p', 'wb'))
-        print('<<|LOGIN_ACCEPTED|>>')
-        return True
-    print('<<!LOGIN_DENIED!>>')
-    return False
-
-##########_RUN_THIS_TO_INIATE_THE_LOGZ_PROGRAM_############
-#login_init()
-############################################################
-
-
-#def security_check():
- #   if d_1(pickle.load(open('key_check.p', 'rb'), pickle.load(open('security_question.p', 'rb'))) == 'fitness_gram_pacer_test':
-  #         print('!')
-                
-
-
-def logz_hard_reset():
-    security = security_check()
-    if security == True:
-        print('<<!DELETE_ALL_LOGS!>>')
-        a = input('>>|ENTER_CONFIRM_TO_CONTINUE|>> ')
-        if a == 'CONFIRM':
-            pickle.dump({} , open('logset.p', 'wb'))
-            done = input('<<|LOGS_RESET|>>')
-            return
-        done = input('<<|COMMAND_CANCELD|>>')
-        return
-
-def logz_backup():
+def log_writer():
+    os.system('cls')
+    date_created = str(datetime.datetime.now())
+    host_name = socket.gethostname()
+    ip_address = socket.gethostbyname(host_name)
+    user = getpass.getuser()
+    log = []
+    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<|LOGZ|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+    log_title = input('log_title     : ')
+    log_type =  input('log_type      : ')
+    print('date_created  : ' + date_created)
+    print('date_modified : ' + date_created)
+    print('user          : ' + user)
+    print('host          : ' + host_name)
+    print('ip_address    : ' + ip_address)
+    print('encrypted     : ' + 'False')
+    print('----------------------------------------------------------------------------')
     while True:
-        while True:
-            print('<<|BACKUP_ENCRYPTED?|>>')
-            command = input('>>|[Y]es/[N]o|>> ')
-            if command == 'Y':
-                encrypt = True
-                break
-            if command == 'N':
-                encrypt = False
-                break
-        file_name = input('>>|ENTER_FILE_NAME|>> ')
-        try:
-            if encrypt:
-                pickle.dump(pickle.load(open('logset.p', 'rb'), open(file_name, 'wb')))
-            if not_encrypt:
-                pickle.dump(d_1(pickle.load(open('key_check.p', 'rb')), pickle.load(open('logset.p', 'rb'))), open(str(file_name), 'wb'))
-            done = input('<<|FILE_SAVED|>>')
-            return
-        except:
-            error = input('<<!ERROR|INVALID_FILE_NAME!>>')
-            continue
-
-def decrypt_logs():
-    decrypted_logs = {}
-    encrypted_logs = pickle.load(open('logset.p', 'rb'))
-    for logs in encrypted_logs:
-        de.update(d_1(encrypted_logs[logs]))
-                              
+        current_line = input('')
+        if current_line == '/LOG':
+            break
+        log.append(current_line)
+    
+    return {
+    'title'         : log_title,
+    'file_type'     : 'log',
+    'date_created'  : date_created,
+    'date_modified' : date_created,
+    'created_by'    : user,
+    'file_id'       : str(uuid.uuid4()),
+    'file_contents' : {
+        'title'        : log_title,
+        'log_type'     : log_type,
+        'date_created' : date_created,
+        'date_modified': date_created,
+        'host'         : host_name,
+        'ip'           : ip_address,
+        'encrypted'    : False,
+        'log'          : log
+        }
+    }
 
 
-def logz():
-    commands = ['READ_LOG', 'NEW_LOG', 'REMOVE_LOG', 'BACK']
-    if pickle.load(open('key_check.p', 'rb')) == '<<!NO_NAME!>>':
-        print('<<!LOGIN_REQUIRED!>>')
-        return
-    while True:
-        os.system('clear')
-        print('<<<<<<<<<<<<<<<<<<<<<<<LOGZ>>>>>>>>>>>>>>>>>>>>>>>')
-        key = pickle.load(open('key_check.p', 'rb'))
-        try:
-            logset = pickle.load(open('logset.p', 'rb'))
-        except:
-            print('<<!ERROR|NO_LOGS_FOUND!>>')
-            logset = {}
-        try:
-            log_id = 0
-            for l in logset:
-                log_id += 1
-                print('{:2}| {}    || {}'.format(l, d_1(key, logset[l][0]), d_1(key, logset[l][1][0])))
-        except:
-            print('<<!ERROR|LOGS_CANNOT_BE_DISPLAYED!>>')
-            pass
-        print('<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>')
-        for c in commands:
-            print('>>| ' + c)
-        print('<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>')
-        command = input('>>ENTER_COMMAND>> ')
-        if command == 'NEW_LOG':
-            log = []
-            os.system('clear')
-            time = datetime.datetime.now()
-            print(time)
-            print('<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>')
-            while True:
-                line = input('')
-                try:
-                    log.append(e_1(key, line))
-                except:
-                    log.append(e_1(key, '<CORRUPTED>'))
-                if line == '/LOG':
-                    #str(int(sorted(logset.keys())[-1]) + 1)
 
-                    try:
-                        logset.update({str(int(sorted([int(l) for l in logset.keys()])[-1]) + 1) : [e_1(key, str(time)), log]})
-                    except:
-                        logset.update({'0' : [e_1(key, str(time)), log]})
-                    pickle.dump(logset, open('logset.p', 'wb'))
-                    break
-        if command[0:10] == 'REMOVE_LOG':
-            remove_num = (''.join([c for c in command if c.isdigit()]))
-            while True:
-                print('<<!REMOVE_LOG_%s?!>>' % remove_num)
-                confirm = input('>>[Y]es/[N]o>> ')
-                if confirm == 'Y':
-                    del logset[remove_num]
-                    pickle.dump(logset, open('logset.p', 'wb'))
-                    deleted = input('<<|LOG_DELETED|>>')
-                    break
-                if confirm == 'N':
-                    cancel = input('<<|COMMAND_CANCELD|>>')
-                    break
-                else:
-                    print('<<|INVALID_ENTRY|>>')
-        if command == 'BACK':
-            return
-        if command[0:8] == 'READ_LOG':
-            os.system('clear')
-            try:
-                c = (''.join([c for c in command if c.isdigit()]))
-                print(c)
-                print('<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>')
-                print(d_1(key, logset[c][0]))
-                for l in logset[c][1]:
-                    print(re.sub('_', ' ', d_1(key, l)))
-                print('<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>')                
-            except:
-                print('<<!ERROR|LOG_NOT_FOUND!>>')
-            command = input('')
-        
+def log_reader(log_file):
+    os.system('cls')
+    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<|LOGZ|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+    print('log_title     : ' + log_file['file_contents']['title'])
+    print('log_type      : ' + log_file['file_contents']['log_type'])
+    print('date_created  : ' + log_file['file_contents']['date_created'])
+    print('date_modified : ' + log_file['file_contents']['date_modified'])
+    print('user          : ' + log_file['created_by'])
+    print('host          : ' + log_file['file_contents']['host'])
+    print('ip_address    : ' + log_file['file_contents']['ip'])
+    print('encrypted     : ' + str(log_file['file_contents']['encrypted']))
+    print('----------------------------------------------------------------------------')
+    for line in log_file['file_contents']['log']:
+        print(str(line))
+    print('----------------------------------------------------------------------------')
+    exit_command = input('')
+
+
+
+
+def encrypt_password(password):
+    password = bytes(password)
+    hlib = hashlib.md5()
+    hlib.update(password)
+    return base64.urlsafe_b64encode(hlib.hexdigest().encode('latin-1'))
+
+
+
+def encrypt_log(password, log):
+    encryption_key = encrypt_password(password)
+    fernet_encryption = Fernet(encryption_key)
+    log['file_contents']['log'] = [fernet_encryption.encrypt(line.encode('utf-8')).decode() for line in log['file_contents']['log']]
+    log['file_contents']['date_modified'] = str(datetime.datetime.now())
+    log['file_contents']['encrypted'] = True
+
+
+
+def decrypt_log(password, log):
+    encryption_key = encrypt_password(password)
+    fernet_encryption = Fernet(encryption_key)
+    log['file_contents']['log'] = [fernet_encryption.decrypt(line.encode('utf-8')).decode() for line in log['file_contents']['log']]
+    log['file_contents']['date_modified'] = str(datetime.datetime.now())
+    log['file_contents']['encrypted'] = False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
